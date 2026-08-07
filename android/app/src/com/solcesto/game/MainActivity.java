@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.ConsoleMessage;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -78,6 +79,19 @@ public class MainActivity extends Activity {
             }
         });
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
+        // Bridge for JS: "exit game" on the title screen must fully close the
+        // process (window.close() is a no-op in Android WebView).
+        webView.addJavascriptInterface(new Object() {
+            @JavascriptInterface
+            public void exitApp() {
+                runOnUiThread(() -> {
+                    Log.i(TAG, "exitApp: closing app process");
+                    finishAffinity();
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                });
+            }
+        }, "AndroidBridge");
 
         setContentView(webView);
 

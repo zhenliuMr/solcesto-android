@@ -40,14 +40,35 @@ public class LocalHttpServer {
         this.pool = Executors.newCachedThreadPool();
     }
 
-    /** Starts the server on an ephemeral port bound to loopback. Returns the port. */
+    /**
+     * Starts the server on a FIXED loopback port.
+     *
+     * IMPORTANT: localStorage is scoped per origin (scheme + host + PORT).
+     * If the port changes on every launch, the game save data / settings /
+     * language preference are silently lost because the WebView sees a
+     * different origin each run. We therefore try a fixed port first and
+     * only fall back to nearby fixed ports (not an ephemeral port) when it
+     * is taken, so the origin stays stable across launches in practice.
+     */
+    private static final int BASE_PORT = 18929;
+    private static final int PORT_ATTEMPTS = 16;
+
     public int start() throws IOException {
-        serverSocket = new ServerSocket(0, 50, InetAddress.getByName("127.0.0.1"));
-        running = true;
-        int port = serverSocket.getLocalPort();
-        new Thread(this::acceptLoop, "c3-http-accept").start();
-        Log.i(TAG, "HTTP server started on 127.0.0.1:" + port);
-        return port;
+        IOException last = null;
+        for (int i = 0; i < PORT_ATTEMPTS; i++) {
+            int candidate = BASE_PORT + i;
+            try {
+                serverSocket = new ServerSocket(candidate, 50, InetAddress.getByName("127.0.0.1"));
+                running = true;
+                new Thread(this::acceptLoop, "c3-http-accept").start();
+                Log.i(TAG, "HTTP server started on 127.0.0.1:" + candidate);
+                return candidate;
+            } catch (IOException e) {
+                last = e;
+                Log.w(TAG, "port " + candidate + " busy, trying next");
+            }
+        }
+        throw new IOException("no free fixed port available (all " + PORT_ATTEMPTS + " busy)", last);
     }
 
     private void acceptLoop() {
