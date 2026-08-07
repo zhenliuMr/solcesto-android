@@ -1,0 +1,41 @@
+# ============================================================
+# SolCesto Android Port — .gitignore
+# ============================================================
+
+# ---------- 签名密钥（绝对禁止上传！） ----------
+*.keystore
+*.jks
+
+# ---------- APK / 签名产物（走 GitHub Releases，不进仓库） ----------
+*.apk
+*.idsig
+*.aab
+
+# ---------- 解包的游戏原始资源（版权 + 体积） ----------
+unpacked/
+android/app/assets/www/
+
+# ---------- 本地工具链 ----------
+android/jdk/
+android/sdk/
+android/tools/
+
+# ---------- 打包中间产物 ----------
+android/build/base*.apk
+android/build/aligned*.apk
+android/build/classes/
+android/build/classes.dex
+android/build/dex/
+android/build/gen/
+android/build/res.zip
+android/build/*.log
+
+# ---------- Python ----------
+__pycache__/
+*.pyc
+
+# ---------- 系统 / IDE ----------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
