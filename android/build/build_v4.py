@@ -4,9 +4,9 @@ import zipfile, os, subprocess, sys
 ROOT = r'D:\Claw\solcesto_port\android'
 BUILD = os.path.join(ROOT, 'build')
 OLD = os.path.join(BUILD, 'base.apk')
-TMP = os.path.join(BUILD, 'base_v16_tmp.apk')
-ALIGNED = os.path.join(BUILD, 'aligned_v16.apk')
-FINAL = r'D:\Claw\solcesto_port\SolCesto-Mobile-v16.apk'
+TMP = os.path.join(BUILD, 'base_v17_tmp.apk')
+ALIGNED = os.path.join(BUILD, 'aligned_v17.apk')
+FINAL = r'D:\Claw\solcesto_port\SolCesto-Mobile-v17.apk'
 DEX = os.path.join(BUILD, 'dex', 'classes.dex')
 WWW = os.path.join(ROOT, 'app', 'assets', 'www')
 KEYSTORE = os.path.join(BUILD, 'solcesto.keystore')
